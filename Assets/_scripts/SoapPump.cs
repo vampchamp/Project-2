@@ -9,6 +9,7 @@ public class SoapPump : MonoBehaviour
     private Vector3 startLocalPosition;
     private bool isPressed;
     private bool soapDispensed;
+    
 
     public SoapZone soapZone;
 
@@ -43,12 +44,23 @@ public class SoapPump : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.name == "SoapZone")
+            return;
+
+        if (other.name == "TriggerZone")
+            return;
+
         isPressed = true;
         soapDispensed = false;
+        if (HandwashingManager.Instance != null)
+        {
+            HandwashingManager.Instance.CompleteSoapStep();
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         isPressed = false;
     }
+    
 }
