@@ -3,7 +3,12 @@ using UnityEngine;
 public class HandSoap : MonoBehaviour
 {
     public GameObject soapVisual;
+    public bool isWet { get; private set; }
 
+    public void SetWet()
+    {
+        isWet = true;
+    }
     public bool HasSoap { get; private set; }
 
     public void AddSoap()
