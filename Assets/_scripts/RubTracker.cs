@@ -1,19 +1,22 @@
 using UnityEngine;
 
-public class VRHandRubTracker : MonoBehaviour
+public class RubTracker : MonoBehaviour
 {
-    [SerializeField] private float movementThreshold = 0.1f; 
-    [SerializeField] private float latherTime = 2.0f;       
-    
-    private Rigidbody rb;
-    private HandFoam otherHandFoam;
-    private bool handsAreTouching = false;
-    Vector3 previousPosition;
+    [SerializeField] private float movementThreshold = 0.1f;
+    [SerializeField] private float latherTime = 2f;
 
-    void Start()
+    private bool handsAreTouching;
+    private Vector3 previousPosition;
+
+    private HandFoam myFoam;
+
+    private void Start()
     {
-        rb = GetComponent<Rigidbody>();
         previousPosition = transform.position;
+        myFoam = GetComponentInParent<HandFoam>();
+
+        if (myFoam == null)
+            myFoam = GetComponentInChildren<HandFoam>();
     }
 
     private void OnTriggerStay(Collider other)
@@ -22,40 +25,48 @@ public class VRHandRubTracker : MonoBehaviour
             return;
 
         handsAreTouching = true;
-
-        otherHandFoam = other.GetComponentInChildren<HandFoam>();
-        Debug.Log(otherHandFoam);
+        
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Hand") )
-        {
-            handsAreTouching = false;
-        }
+        if (!other.CompareTag("Hand"))
+            return;
+
+        handsAreTouching = false;
     }
 
-    void Update()
+    private void Update()
     {
         HandwashingManager manager = HandwashingManager.Instance;
-        if (manager == null || manager.CurrentStep != HandwashingManager.WashStep.RubPalms) return;
 
-        if (handsAreTouching && IsMoving())
-        {
-            manager.AccumulateProgress(HandwashingManager.WashStep.RubPalms, Time.deltaTime);
+        if (manager == null)
+            return;
 
-            HandFoam myFoam = GetComponentInChildren<HandFoam>();
-            if (myFoam != null)
-                myFoam.BuildFoam(Time.deltaTime / latherTime);
+        if (manager.CurrentStep != HandwashingManager.WashStep.RubPalms)
+            return;
 
-            if (otherHandFoam != null)
-                otherHandFoam.BuildFoam(Time.deltaTime / latherTime);
-        }
+        bool moving = IsMoving();
+
+        if (!handsAreTouching || !moving)
+            return;
+
+        manager.AccumulateProgress(
+            HandwashingManager.WashStep.RubPalms,
+            Time.deltaTime);
+
+        float amount = Time.deltaTime / latherTime;
+
+        if (myFoam != null)
+            myFoam.BuildFoam(amount);
+        
     }
 
     private bool IsMoving()
     {
-        float speed = Vector3.Distance(transform.position, previousPosition) / Time.deltaTime;
+        float speed =
+            Vector3.Distance(transform.position, previousPosition)
+            / Time.deltaTime;
 
         previousPosition = transform.position;
 

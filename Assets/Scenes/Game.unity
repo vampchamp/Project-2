@@ -1150,8 +1150,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe3472ac325459949bf15bb5198daac7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandFoam
-  foamAssetParent: {fileID: 1304327250}
-  soap: {fileID: 1381428310}
+  foamAssetParents:
+  - {fileID: 442610535}
+  - {fileID: 1304327250}
+  soaps:
+  - {fileID: 1381428310}
 --- !u!114 &945268883
 MonoBehaviour:
   m_ObjectHideFlags: 0
