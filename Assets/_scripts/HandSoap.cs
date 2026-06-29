@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 public class HandSoap : MonoBehaviour
 {
+
     public GameObject soapVisual;
     public bool isWet { get; private set; }
 
@@ -22,4 +24,6 @@ public class HandSoap : MonoBehaviour
         HasSoap = false;
         soapVisual.SetActive(false);
     }
+
+
 }

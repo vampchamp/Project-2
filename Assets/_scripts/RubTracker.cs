@@ -6,6 +6,7 @@ public class VRHandRubTracker : MonoBehaviour
     [SerializeField] private float latherTime = 2.0f;       
     
     private Rigidbody rb;
+    private HandFoam otherHandFoam;
     private bool handsAreTouching = false;
     Vector3 previousPosition;
 
@@ -15,17 +16,20 @@ public class VRHandRubTracker : MonoBehaviour
         previousPosition = transform.position;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Hand"))
-        {
-            handsAreTouching = true;
-        }
+        if (!other.CompareTag("Hand"))
+            return;
+
+        handsAreTouching = true;
+
+        otherHandFoam = other.GetComponentInChildren<HandFoam>();
+        Debug.Log(otherHandFoam);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Hand") && other.transform.root != transform.root)
+        if (other.CompareTag("Hand") )
         {
             handsAreTouching = false;
         }
@@ -40,11 +44,12 @@ public class VRHandRubTracker : MonoBehaviour
         {
             manager.AccumulateProgress(HandwashingManager.WashStep.RubPalms, Time.deltaTime);
 
-            HandFoam handFoam = GetComponentInChildren<HandFoam>();
-            if (handFoam != null)
-            {
-                handFoam.BuildFoam(Time.deltaTime / latherTime);
-            }
+            HandFoam myFoam = GetComponentInChildren<HandFoam>();
+            if (myFoam != null)
+                myFoam.BuildFoam(Time.deltaTime / latherTime);
+
+            if (otherHandFoam != null)
+                otherHandFoam.BuildFoam(Time.deltaTime / latherTime);
         }
     }
 
