@@ -7,15 +7,17 @@ public class VRHandRubTracker : MonoBehaviour
     
     private Rigidbody rb;
     private bool handsAreTouching = false;
+    Vector3 previousPosition;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        previousPosition = transform.position;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Hand") && other.transform.root != transform.root)
+        if (other.CompareTag("Hand"))
         {
             handsAreTouching = true;
         }
@@ -48,10 +50,10 @@ public class VRHandRubTracker : MonoBehaviour
 
     private bool IsMoving()
     {
-        if (rb != null)
-        {
-            return rb.linearVelocity.magnitude > movementThreshold;
-        }
-        return true; 
+        float speed = Vector3.Distance(transform.position, previousPosition) / Time.deltaTime;
+
+        previousPosition = transform.position;
+
+        return speed > movementThreshold;
     }
 }

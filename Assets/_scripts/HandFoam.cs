@@ -3,6 +3,7 @@ using UnityEngine;
 public class HandFoam : MonoBehaviour
 {
     public GameObject foamAssetParent;
+    public GameObject soap;
     
     public float FoamAmount { get; private set; } = 0f; 
 
@@ -29,6 +30,15 @@ public class HandFoam : MonoBehaviour
 
         FoamAmount = Mathf.Clamp01(FoamAmount + amount);
         UpdateFoamVisibility(FoamAmount);
+        Renderer renderer = soap.GetComponent<Renderer>();
+        Color c = renderer.material.color;
+        c.a = 1f - FoamAmount;
+        renderer.material.color = c;
+
+        if (FoamAmount >= 1f)
+        {
+            soap.SetActive(false);
+        }
     }
 
     public void WashFoam(float amount)
