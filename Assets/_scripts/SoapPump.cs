@@ -3,15 +3,15 @@ using UnityEngine;
 public class SoapPump : MonoBehaviour
 {
     [Header("Pump Settings")]
-    public float pressDistance = 0.03f;
-    public float pressSpeed = 10f;
+    [SerializeField] private float pressDistance = 0.03f;
+    [SerializeField] private float pressSpeed = 10f;
+
+    [SerializeField] private SoapZone soapZone;
 
     private Vector3 startLocalPosition;
+
     private bool isPressed;
     private bool soapDispensed;
-    
-
-    public SoapZone soapZone;
 
     private void Start()
     {
@@ -24,43 +24,49 @@ public class SoapPump : MonoBehaviour
 
         if (isPressed)
         {
-            targetPosition =
-                startLocalPosition + Vector3.down * pressDistance;
+            targetPosition = startLocalPosition + Vector3.down * pressDistance;
 
             if (!soapDispensed &&
+                soapZone != null &&
                 soapZone.handInZone != null)
             {
                 soapZone.handInZone.AddSoap();
+
                 soapDispensed = true;
+
+                HandwashingManager manager = HandwashingManager.Instance;
+
+                if (manager != null &&
+                    manager.CurrentStep == HandwashingManager.WashStep.ApplySoap)
+                {
+                    manager.CompleteCurrentStep();
+                }
             }
         }
 
         transform.localPosition = Vector3.Lerp(
             transform.localPosition,
             targetPosition,
-            Time.deltaTime * pressSpeed
-        );
+            Time.deltaTime * pressSpeed);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == "SoapZone")
+        if (other.gameObject == soapZone.gameObject)
             return;
 
-        if (other.name == "TriggerZone")
-            return;
-
-        isPressed = true;
-        soapDispensed = false;
-        if (HandwashingManager.Instance != null)
+        if (other.CompareTag("Hand"))
         {
-            HandwashingManager.Instance.CompleteSoapStep();
+            isPressed = true;
+            soapDispensed = false;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        isPressed = false;
+        if (other.CompareTag("Hand"))
+        {
+            isPressed = false;
+        }
     }
-    
 }

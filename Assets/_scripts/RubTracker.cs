@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class RubTracker : MonoBehaviour
 {
+    [Header("WHO Step")]
+    [SerializeField] private HandwashingManager.WashStep trackedStep;
+
+    [Header("Settings")]
     [SerializeField] private float movementThreshold = 0.1f;
     [SerializeField] private float latherTime = 2f;
 
@@ -13,6 +17,7 @@ public class RubTracker : MonoBehaviour
     private void Start()
     {
         previousPosition = transform.position;
+
         myFoam = GetComponentInParent<HandFoam>();
 
         if (myFoam == null)
@@ -25,7 +30,6 @@ public class RubTracker : MonoBehaviour
             return;
 
         handsAreTouching = true;
-        
     }
 
     private void OnTriggerExit(Collider other)
@@ -43,30 +47,28 @@ public class RubTracker : MonoBehaviour
         if (manager == null)
             return;
 
-        if (manager.CurrentStep != HandwashingManager.WashStep.RubPalms)
+        if (manager.CurrentStep != trackedStep)
             return;
 
-        bool moving = IsMoving();
-
-        if (!handsAreTouching || !moving)
+        if (!handsAreTouching)
             return;
 
-        manager.AccumulateProgress(
-            HandwashingManager.WashStep.RubPalms,
-            Time.deltaTime);
+        if (!IsMoving())
+            return;
 
-        float amount = Time.deltaTime / latherTime;
+        manager.AccumulateProgress(trackedStep, Time.deltaTime);
 
         if (myFoam != null)
-            myFoam.BuildFoam(amount);
-        
+        {
+            myFoam.BuildFoam(Time.deltaTime / latherTime);
+        }
     }
 
     private bool IsMoving()
     {
         float speed =
-            Vector3.Distance(transform.position, previousPosition)
-            / Time.deltaTime;
+            Vector3.Distance(transform.position, previousPosition) /
+            Time.deltaTime;
 
         previousPosition = transform.position;
 
