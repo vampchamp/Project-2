@@ -26,22 +26,40 @@ public class HandwashingManager : MonoBehaviour
     public float CurrentStepProgress { get; private set; }
     public float TotalElapsedTime { get; private set; }
 
+    public float LeftHandProgress { get; private set; }
+    public float RightHandProgress { get; private set; }
+
+    [Header("Absolute Workspace Tuning (World/Tracking Space)")]
+    [SerializeField] private float maxDistance = 0.30f;       // Roomy proximity check for messy water data
+    [SerializeField] private float targetScrubDistance = 0.35f; // Physical motion threshold (Lowered to clear faster)
+
+    // Safety check fallback: Only requires hands to exist somewhere in the tracking environment
+    [SerializeField] private bool useAbsoluteProximityOnly = true;
+
     public event Action<WashStep> OnStepChanged;
     public event Action<float> OnProgressChanged;
     public event Action<WashStep> OnStepCompleted;
+    public event Action<Handedness, float> OnHandProgressChanged;
 
     private readonly HashSet<WashStep> completedSteps = new();
+
+    private MonoBehaviour xrHandManagerInstance;
+    private bool searchedForComponents = false;
+
+    private Vector3 lastLeftPalmPos;
+    private Vector3 lastRightPalmPos;
+    private bool standardPositionsInitialized = false;
 
     public static readonly Dictionary<WashStep, string> StepInstructions = new()
     {
         { WashStep.WetHands, "Wet your hands thoroughly." },
         { WashStep.ApplySoap, "Apply enough soap." },
-        { WashStep.PalmToPalm, "Rub palm to palm." },
-        { WashStep.BackOfHands, "Rub the back of each hand." },
-        { WashStep.FingersInterlaced, "Rub with fingers interlaced." },
-        { WashStep.BacksOfFingers, "Rub backs of fingers." },
-        { WashStep.Thumbs, "Rub each thumb rotationally." },
-        { WashStep.Fingertips, "Rub fingertips in opposite palm." },
+        { WashStep.PalmToPalm, "Rub palm to palm (use both hands)." },
+        { WashStep.BackOfHands, "Rub the back of each hand (left and right)." },
+        { WashStep.FingersInterlaced, "Rub with fingers interlaced (both hands)." },
+        { WashStep.BacksOfFingers, "Rub backs of fingers (both hands)." },
+        { WashStep.Thumbs, "Rub each thumb rotationally (left and right)." },
+        { WashStep.Fingertips, "Rub fingertips in opposite palm (left and right)." },
         { WashStep.Rinse, "Rinse all soap away." },
         { WashStep.Dry, "Dry your hands." }
     };
@@ -49,13 +67,13 @@ public class HandwashingManager : MonoBehaviour
     private readonly Dictionary<WashStep, float> stepDurations = new()
     {
         { WashStep.WetHands, 2f },
-        { WashStep.ApplySoap, 0f }, // instant
-        { WashStep.PalmToPalm, 3f },
-        { WashStep.BackOfHands, 3f },
-        { WashStep.FingersInterlaced, 3f },
-        { WashStep.BacksOfFingers, 3f },
-        { WashStep.Thumbs, 3f },
-        { WashStep.Fingertips, 3f },
+        { WashStep.ApplySoap, 1.5f },
+        { WashStep.PalmToPalm, 4f },
+        { WashStep.BackOfHands, 4f },
+        { WashStep.FingersInterlaced, 4f },
+        { WashStep.BacksOfFingers, 4f },
+        { WashStep.Thumbs, 4f },
+        { WashStep.Fingertips, 4f },
         { WashStep.Rinse, 3f },
         { WashStep.Dry, 2f }
     };
@@ -67,13 +85,14 @@ public class HandwashingManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
     }
 
     private void Start()
     {
         CurrentStepProgress = 0f;
+        LeftHandProgress = 0f;
+        RightHandProgress = 0f;
         OnStepChanged?.Invoke(CurrentStep);
     }
 
@@ -81,6 +100,132 @@ public class HandwashingManager : MonoBehaviour
     {
         if (CurrentStep != WashStep.Complete)
             TotalElapsedTime += Time.deltaTime;
+
+        if (IsRubbingStep(CurrentStep))
+        {
+            ProcessVRHandTrackingInput();
+        }
+    }
+
+    private void ProcessVRHandTrackingInput()
+    {
+        if (!searchedForComponents)
+        {
+            searchedForComponents = true;
+            foreach (var mono in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
+            {
+                if (mono.GetType().Name == "XRHandManager")
+                {
+                    xrHandManagerInstance = mono;
+                    break;
+                }
+            }
+        }
+
+        if (xrHandManagerInstance == null) return;
+
+        try
+        {
+            var subsystemProp = xrHandManagerInstance.GetType().GetProperty("subsystem");
+            if (subsystemProp == null) return;
+
+            var subsystem = subsystemProp.GetValue(xrHandManagerInstance);
+            if (subsystem == null) return;
+
+            var leftHand = subsystem.GetType().GetProperty("leftHand")?.GetValue(subsystem);
+            var rightHand = subsystem.GetType().GetProperty("rightHand")?.GetValue(subsystem);
+            if (leftHand == null || rightHand == null) return;
+
+            bool leftTracked = (bool)(leftHand.GetType().GetProperty("isTracked")?.GetValue(leftHand) ?? false);
+            bool rightTracked = (bool)(rightHand.GetType().GetProperty("isTracked")?.GetValue(rightHand) ?? false);
+
+            // If completely blind under the running water, do not drop variables
+            if (!leftTracked && !rightTracked) return;
+
+            var getJointMethod = leftHand.GetType().GetMethod("GetJoint");
+            if (getJointMethod == null) return;
+
+            var leftPalmJoint = getJointMethod.Invoke(leftHand, new object[] { 2 });
+            var rightPalmJoint = getJointMethod.Invoke(rightHand, new object[] { 2 });
+            if (leftPalmJoint == null || rightPalmJoint == null) return;
+
+            var tryGetPoseMethod = leftPalmJoint.GetType().GetMethod("TryGetPose");
+            if (tryGetPoseMethod == null) return;
+
+            object[] leftArgs = new object[] { default(Pose) };
+            object[] rightArgs = new object[] { default(Pose) };
+
+            bool leftValid = (bool)tryGetPoseMethod.Invoke(leftPalmJoint, leftArgs);
+            bool rightValid = (bool)tryGetPoseMethod.Invoke(rightPalmJoint, rightArgs);
+
+            Pose leftPose = leftValid ? (Pose)leftArgs[0] : default;
+            Pose rightPose = rightValid ? (Pose)rightArgs[0] : default;
+
+            if (!standardPositionsInitialized)
+            {
+                lastLeftPalmPos = leftPose.position;
+                lastRightPalmPos = rightPose.position;
+                standardPositionsInitialized = true;
+                return;
+            }
+
+            // Delta translation frames calculation
+            float leftFrameMovement = leftTracked && leftValid ? Vector3.Distance(leftPose.position, lastLeftPalmPos) : 0f;
+            float rightFrameMovement = rightTracked && rightValid ? Vector3.Distance(rightPose.position, lastRightPalmPos) : 0f;
+
+            // Strict filter threshold to stop telemetry spikes inside water basins
+            if (leftFrameMovement > 0.12f) leftFrameMovement = 0f;
+            if (rightFrameMovement > 0.12f) rightFrameMovement = 0f;
+
+            if (leftTracked && leftValid) lastLeftPalmPos = leftPose.position;
+            if (rightTracked && rightValid) lastRightPalmPos = rightPose.position;
+
+            // --- ZERO ANGLE / ZERO VIEW CONSTRAINTS DEPENDENCY ---
+            // We strip head tracking and camera positions entirely from the logic loops.
+            if (leftTracked && rightTracked && leftValid && rightValid)
+            {
+                float palmDistance = Vector3.Distance(leftPose.position, rightPose.position);
+
+                // If they are within 30cm of each other, accumulation runs completely free
+                if (palmDistance <= maxDistance)
+                {
+                    float frameScrubDelta = leftFrameMovement + rightFrameMovement;
+                    if (frameScrubDelta > 0.0003f)
+                    {
+                        AccumulateUnifiedScrubProgress(frameScrubDelta);
+                    }
+                }
+            }
+            else if (useAbsoluteProximityOnly)
+            {
+                // Under water tracking drop mitigation strategy
+                float singleHandDelta = Mathf.Max(leftFrameMovement, rightFrameMovement);
+                if (singleHandDelta > 0.0003f)
+                {
+                    AccumulateUnifiedScrubProgress(singleHandDelta * 1.5f);
+                }
+            }
+        }
+        catch
+        {
+            // Fail-safe container boundaries
+        }
+    }
+
+    private void AccumulateUnifiedScrubProgress(float deltaAmount)
+    {
+        float progressAddition = (deltaAmount / targetScrubDistance);
+        CurrentStepProgress = Mathf.Clamp01(CurrentStepProgress + progressAddition);
+
+        LeftHandProgress = CurrentStepProgress;
+        RightHandProgress = CurrentStepProgress;
+
+        OnProgressChanged?.Invoke(CurrentStepProgress);
+        OnHandProgressChanged?.Invoke(Handedness.Left, LeftHandProgress);
+        OnHandProgressChanged?.Invoke(Handedness.Right, RightHandProgress);
+
+        if (CurrentStepProgress >= 1f)
+            CompleteCurrentStep();
     }
 
     public void AccumulateProgress(WashStep step, float deltaTime)
@@ -89,7 +234,6 @@ public class HandwashingManager : MonoBehaviour
             return;
 
         float duration = stepDurations[step];
-
         if (duration <= 0f)
             return;
 
@@ -102,15 +246,20 @@ public class HandwashingManager : MonoBehaviour
             CompleteCurrentStep();
     }
 
+    public void AccumulateHandProgress(WashStep step, Handedness hand, float progressAmount)
+    {
+        if (step != CurrentStep) return;
+        float normalizedDelta = progressAmount / stepDurations[step];
+        AccumulateUnifiedScrubProgress(normalizedDelta * targetScrubDistance);
+    }
+
     public void CompleteCurrentStep()
     {
         if (CurrentStep == WashStep.Complete)
             return;
 
         completedSteps.Add(CurrentStep);
-
         OnStepCompleted?.Invoke(CurrentStep);
-
         AdvanceStep();
     }
 
@@ -122,18 +271,24 @@ public class HandwashingManager : MonoBehaviour
         int next = (int)CurrentStep + 1;
 
         if (next >= Enum.GetValues(typeof(WashStep)).Length - 1)
-        {
             CurrentStep = WashStep.Complete;
-        }
         else
-        {
             CurrentStep = (WashStep)next;
-        }
 
         CurrentStepProgress = 0f;
+        standardPositionsInitialized = false;
+        ResetHandProgress();
 
         OnProgressChanged?.Invoke(0f);
         OnStepChanged?.Invoke(CurrentStep);
+    }
+
+    private void ResetHandProgress()
+    {
+        LeftHandProgress = 0f;
+        RightHandProgress = 0f;
+        OnHandProgressChanged?.Invoke(Handedness.Left, 0f);
+        OnHandProgressChanged?.Invoke(Handedness.Right, 0f);
     }
 
     public bool IsStepCompleted(WashStep step)
@@ -145,7 +300,6 @@ public class HandwashingManager : MonoBehaviour
     {
         if (CurrentStep == WashStep.Complete)
             return "Hand washing complete!";
-
         return StepInstructions[CurrentStep];
     }
 
@@ -166,6 +320,8 @@ public class HandwashingManager : MonoBehaviour
         CurrentStep = WashStep.WetHands;
         CurrentStepProgress = 0f;
         TotalElapsedTime = 0f;
+        standardPositionsInitialized = false;
+        ResetHandProgress();
 
         OnProgressChanged?.Invoke(0f);
         OnStepChanged?.Invoke(CurrentStep);

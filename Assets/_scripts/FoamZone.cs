@@ -5,24 +5,29 @@ public class FoamZone : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         HandFoam handFoam = other.GetComponentInChildren<HandFoam>();
-        if (handFoam == null) return;
+        if (handFoam == null) handFoam = other.GetComponentInParent<HandFoam>();
+
+        HandSoap handSoap = other.GetComponentInChildren<HandSoap>();
+        if (handSoap == null) handSoap = other.GetComponentInParent<HandSoap>();
+
+        if (handFoam == null && handSoap == null) return;
 
         HandwashingManager manager = HandwashingManager.Instance;
         if (manager == null) return;
 
-        // STEP 0: Wetting Hands
+        // Wetting hands
         if (manager.CurrentStep == HandwashingManager.WashStep.WetHands)
         {
             manager.AccumulateProgress(HandwashingManager.WashStep.WetHands, Time.deltaTime);
+            if (handSoap != null) handSoap.SetWet();
         }
-        // STEP 3: Rinsing Soap & Foam Away
+        // Rinsing soap & foam away
         else if (manager.CurrentStep == HandwashingManager.WashStep.Rinse)
         {
             manager.AccumulateProgress(HandwashingManager.WashStep.Rinse, Time.deltaTime);
-            
-            // Simultaneously wash away the visual foam spheres
-            // (Using 2.5f as the wash duration)
-            handFoam.WashFoam(Time.deltaTime / 2.5f);
+
+            if (handFoam != null) handFoam.WashFoam(Time.deltaTime / 2.5f);
+            if (handSoap != null) handSoap.WashOffSoap();   // turn the soap visual off under water
         }
     }
 }
