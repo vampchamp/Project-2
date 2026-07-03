@@ -52,16 +52,16 @@ public class HandwashingManager : MonoBehaviour
 
     public static readonly Dictionary<WashStep, string> StepInstructions = new()
     {
-        { WashStep.WetHands, "Wet your hands thoroughly." },
-        { WashStep.ApplySoap, "Apply enough soap." },
-        { WashStep.PalmToPalm, "Rub palm to palm (use both hands)." },
-        { WashStep.BackOfHands, "Rub the back of each hand (left and right)." },
-        { WashStep.FingersInterlaced, "Rub with fingers interlaced (both hands)." },
-        { WashStep.BacksOfFingers, "Rub backs of fingers (both hands)." },
-        { WashStep.Thumbs, "Rub each thumb rotationally (left and right)." },
-        { WashStep.Fingertips, "Rub fingertips in opposite palm (left and right)." },
-        { WashStep.Rinse, "Rinse all soap away." },
-        { WashStep.Dry, "Dry your hands." }
+        { WashStep.WetHands, "Wet hands with water." },
+        { WashStep.ApplySoap, "Press the soap pump and apply enough soap to cover all hand surfaces." },
+        { WashStep.PalmToPalm, "Rub hands palm to palm." },
+        { WashStep.BackOfHands, "Rub right palm over left dorsum, then left palm over right dorsum." },
+        { WashStep.FingersInterlaced, "Rub palm to palm with fingers interlaced." },
+        { WashStep.BacksOfFingers, "Rub backs of fingers to opposing palms with fingers interlocked." },
+        { WashStep.Thumbs, "Rotationally rub each thumb clasped in the opposite palm." },
+        { WashStep.Fingertips, "Rotationally rub fingertips backwards and forwards in the opposite palm." },
+        { WashStep.Rinse, "Rinse hands with water." },
+        { WashStep.Dry, "Dry hands thoroughly, then use the towel to turn off the faucet." }
     };
 
     private readonly Dictionary<WashStep, float> stepDurations = new()

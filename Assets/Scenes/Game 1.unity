@@ -5006,6 +5006,19 @@ Transform:
   - {fileID: 815975766}
   m_Father: {fileID: 1178908760}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!134 &1486315949
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!21 &1508853079
 Material:
   serializedVersion: 8
@@ -6122,6 +6135,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!134 &1806392227
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &1822465814
 GameObject:
   m_ObjectHideFlags: 0
@@ -6772,6 +6798,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1892815455}
   - component: {fileID: 1892815454}
+  - component: {fileID: 1892815456}
   m_Layer: 0
   m_Name: Handwash Demo
   m_TagString: Untagged
@@ -6793,6 +6820,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HandwashDemoController
   leftGhost: {fileID: 240291283736139694}
   rightGhost: {fileID: 8374256199690228159}
+  ghostAnimator: {fileID: 1892815456}
+  preferAnimationClips: 1
+  proceduralFallbackWhenMissing: 1
+  animationPlaybackSpeed: 1
+  stepAnimations:
+  - step: 0
+    clip: {fileID: 7400000, guid: 4833afedee3cbad44bb8aa7a29858783, type: 2}
+  - step: 1
+    clip: {fileID: 7400000, guid: 08d9bdaa46821ac42a2e2772624d577b, type: 2}
+  - step: 2
+    clip: {fileID: 7400000, guid: ba57ea0b13900a643857e947fc89490f, type: 2}
+  - step: 3
+    clip: {fileID: 0}
+  - step: 4
+    clip: {fileID: 0}
+  - step: 5
+    clip: {fileID: 0}
+  - step: 6
+    clip: {fileID: 0}
+  - step: 7
+    clip: {fileID: 0}
+  - step: 8
+    clip: {fileID: 0}
+  - step: 9
+    clip: {fileID: 0}
   sinkAnchor: {fileID: 667491886}
   soapAnchor: {fileID: 793710628}
   towelAnchor: {fileID: 2116357572}
@@ -6820,6 +6872,28 @@ Transform:
   - {fileID: 8374256199690228159}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1892815456
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892815453}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6e436ff4465d349419556f36fc7d22e6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1893809321
 GameObject:
   m_ObjectHideFlags: 0
@@ -6866,6 +6940,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!134 &1951313790
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &1958722165
 GameObject:
   m_ObjectHideFlags: 0
@@ -12143,7 +12230,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2022838411}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 1951313790}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -12222,7 +12309,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2032347161}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 1486315949}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -13992,15 +14079,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 240291283735710670}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.001, y: 0.001, z: -0.035}
+  m_LocalRotation: {x: -0, y: -0, z: 0.9806944, w: 0.19554648}
+  m_LocalPosition: {x: 0.0488079, y: 0.8662412, z: 0.9236}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 240291283736139688}
   - {fileID: 240291283736139690}
   m_Father: {fileID: 1892815455}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 157.447}
 --- !u!4 &240291283736139696
 Transform:
   m_ObjectHideFlags: 0
@@ -14660,7 +14747,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5088819149233844716}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 1806392227}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -15732,7 +15819,7 @@ Transform:
   m_GameObject: {fileID: 8374256199689932253}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15746,15 +15833,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8374256199689932255}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.001, y: 0.001, z: -0.035}
+  m_LocalRotation: {x: -0.34623882, y: -0.45698956, z: -0.4947818, w: 0.65304685}
+  m_LocalPosition: {x: 0.0075, y: 0.7575, z: 0.9476}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8374256199690228153}
   - {fileID: 8374256199690228155}
   m_Father: {fileID: 1892815455}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: -64.748, y: -36.583, z: -50.627}
 --- !u!1 &8604347793235424239
 GameObject:
   m_ObjectHideFlags: 0
@@ -15840,5 +15927,5 @@ SceneRoots:
   - {fileID: 1537981512}
   - {fileID: 1538289053}
   - {fileID: 145575907}
-  - {fileID: 1892815455}
   - {fileID: 178010711}
+  - {fileID: 1892815455}
