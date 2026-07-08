@@ -1,8 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.IO;
+
 public class recorder : MonoBehaviour
 {
+    [SerializeField]
+    private string currentRecordingName = "handwash.demo";
+    
     [Header("Live XR Hands")]
     public Transform leftRoot;
     public Transform rightRoot;
@@ -12,16 +17,24 @@ public class recorder : MonoBehaviour
     public Transform tutorialRightRoot;
     public GameObject tutorialHands;
 
-    class BoneFrame
+    [System.Serializable]
+    public class BoneFrame
     {
         public Vector3 position;
         public Quaternion rotation;
     }
 
-    class Frame
+    [System.Serializable]
+    public class Frame
     {
         public List<BoneFrame> left = new();
         public List<BoneFrame> right = new();
+    }
+
+    [System.Serializable]
+    public class Recording
+    {
+        public List<Frame> frames = new();
     }
 
     private readonly List<Transform> leftBones = new();
@@ -30,12 +43,17 @@ public class recorder : MonoBehaviour
     private readonly List<Transform> tutorialLeftBones = new();
     private readonly List<Transform> tutorialRightBones = new();
 
-    private readonly List<Frame> recording = new();
+    private Recording recording = new();
 
     private bool isRecording;
     private bool isPlaying;
     private int playbackFrame;
 
+    public void SetRecordingName(string filename)
+    {
+        currentRecordingName = filename;
+    }
+    
     void Start()
     {
         GatherBones(leftRoot, leftBones);
@@ -67,7 +85,7 @@ public class recorder : MonoBehaviour
             StopRecording();
 
         if (Keyboard.current.pKey.wasPressedThisFrame)
-            StartPlayback();
+            StartPlayback(currentRecordingName);
     }
 
     void GatherBones(Transform root, List<Transform> list)
@@ -82,7 +100,7 @@ public class recorder : MonoBehaviour
     {
         Debug.Log("Recording Started");
 
-        recording.Clear();
+        recording.frames.Clear();
         playbackFrame = 0;
         isPlaying = false;
         isRecording = true;
@@ -92,23 +110,30 @@ public class recorder : MonoBehaviour
     {
         isRecording = false;
 
-        Debug.Log($"Recording Finished. Frames: {recording.Count}");
+        Debug.Log($"Recording Finished. Frames: {recording.frames.Count}");
+
+        SaveRecording(currentRecordingName);
     }
 
-    public void StartPlayback()
+    public void StartPlayback(string filename)
     {
-        if (recording.Count == 0)
+        LoadRecording(filename);
+
+        if (recording.frames.Count == 0)
         {
-            Debug.LogWarning("Nothing has been recorded.");
+            Debug.LogWarning($"Recording '{filename}' not found.");
             return;
         }
-
-        Debug.Log("Playback Started");
 
         tutorialHands.SetActive(true);
 
         playbackFrame = 0;
         isPlaying = true;
+    }
+    public void StopPlayback()
+    {
+        isPlaying = false;
+        tutorialHands.SetActive(false);
     }
 
     void RecordFrame()
@@ -133,12 +158,12 @@ public class recorder : MonoBehaviour
             });
         }
 
-        recording.Add(frame);
+        recording.frames.Add(frame);
     }
 
     void PlayFrame()
     {
-        if (playbackFrame >= recording.Count)
+        if (playbackFrame >= recording.frames.Count)
         {
             Debug.Log("Playback Finished");
 
@@ -147,7 +172,7 @@ public class recorder : MonoBehaviour
             return;
         }
 
-        Frame frame = recording[playbackFrame];
+        Frame frame = recording.frames[playbackFrame];
 
         for (int i = 0; i < tutorialLeftBones.Count; i++)
         {
@@ -162,5 +187,120 @@ public class recorder : MonoBehaviour
         }
 
         playbackFrame++;
+    }
+    public void SaveRecording(string filename)
+    {
+        string path = Path.Combine(Application.streamingAssetsPath, filename);
+
+        Directory.CreateDirectory(Application.streamingAssetsPath);
+
+        using (BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)))
+        {
+            writer.Write(recording.frames.Count);
+
+            foreach (Frame frame in recording.frames)
+            {
+                // LEFT HAND
+                writer.Write(frame.left.Count);
+
+                foreach (BoneFrame bone in frame.left)
+                {
+                    writer.Write(bone.position.x);
+                    writer.Write(bone.position.y);
+                    writer.Write(bone.position.z);
+
+                    writer.Write(bone.rotation.x);
+                    writer.Write(bone.rotation.y);
+                    writer.Write(bone.rotation.z);
+                    writer.Write(bone.rotation.w);
+                }
+
+                // RIGHT HAND
+                writer.Write(frame.right.Count);
+
+                foreach (BoneFrame bone in frame.right)
+                {
+                    writer.Write(bone.position.x);
+                    writer.Write(bone.position.y);
+                    writer.Write(bone.position.z);
+
+                    writer.Write(bone.rotation.x);
+                    writer.Write(bone.rotation.y);
+                    writer.Write(bone.rotation.z);
+                    writer.Write(bone.rotation.w);
+                }
+            }
+        }
+
+        Debug.Log($"Saved recording to:\n{path}");
+    }
+    public void LoadRecording(string filename)
+    {
+        string path = Path.Combine(Application.streamingAssetsPath, filename);
+
+        if (!File.Exists(path))
+        {
+            Debug.LogWarning("Recording file not found.");
+            recording.frames.Clear();
+            return;
+        }
+
+        recording.frames.Clear();
+
+        using (BinaryReader reader = new BinaryReader(File.Open(path, FileMode.Open)))
+        {
+            int frameCount = reader.ReadInt32();
+
+            for (int f = 0; f < frameCount; f++)
+            {
+                Frame frame = new Frame();
+
+                // LEFT HAND
+                int leftCount = reader.ReadInt32();
+
+                for (int i = 0; i < leftCount; i++)
+                {
+                    BoneFrame bone = new BoneFrame();
+
+                    bone.position = new Vector3(
+                        reader.ReadSingle(),
+                        reader.ReadSingle(),
+                        reader.ReadSingle());
+
+                    bone.rotation = new Quaternion(
+                        reader.ReadSingle(),
+                        reader.ReadSingle(),
+                        reader.ReadSingle(),
+                        reader.ReadSingle());
+
+                    frame.left.Add(bone);
+                }
+
+                // RIGHT HAND
+                int rightCount = reader.ReadInt32();
+
+                for (int i = 0; i < rightCount; i++)
+                {
+                    BoneFrame bone = new BoneFrame();
+
+                    bone.position = new Vector3(
+                        reader.ReadSingle(),
+                        reader.ReadSingle(),
+                        reader.ReadSingle());
+
+                    bone.rotation = new Quaternion(
+                        reader.ReadSingle(),
+                        reader.ReadSingle(),
+                        reader.ReadSingle(),
+                        reader.ReadSingle());
+
+                    frame.right.Add(bone);
+                }
+
+                recording.frames.Add(frame);
+            }
+        }
+
+        Debug.Log($"Loaded {recording.frames.Count} frames.");
     }
 }
