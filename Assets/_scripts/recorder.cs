@@ -36,6 +36,8 @@ public class recorder : MonoBehaviour
     {
         public List<Frame> frames = new();
     }
+    [SerializeField] private int trimStartFrames = 30;
+    [SerializeField] private int trimEndFrames = 15;
 
     private readonly List<Transform> leftBones = new();
     private readonly List<Transform> rightBones = new();
@@ -109,8 +111,12 @@ public class recorder : MonoBehaviour
     public void StopRecording()
     {
         isRecording = false;
-
-        Debug.Log($"Recording Finished. Frames: {recording.frames.Count}");
+        
+        int start = Mathf.Min(trimStartFrames, recording.frames.Count);
+        recording.frames.RemoveRange(0, start);
+        
+        int end = Mathf.Min(trimEndFrames, recording.frames.Count);
+        recording.frames.RemoveRange(recording.frames.Count - end, end);
 
         SaveRecording(currentRecordingName);
     }

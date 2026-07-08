@@ -502,37 +502,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2468282021181825328, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2142785750}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 491124901914486170, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 99240212}
-    - targetCorrespondingSourceObject: {fileID: 491124901914486170, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 99240211}
-    - targetCorrespondingSourceObject: {fileID: 491124901914486170, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 99240210}
-    - targetCorrespondingSourceObject: {fileID: 491124901914486170, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 99240209}
-    - targetCorrespondingSourceObject: {fileID: 491124901914486170, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 99240208}
-    - targetCorrespondingSourceObject: {fileID: 491124901914486170, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 99240207}
-    - targetCorrespondingSourceObject: {fileID: 491124901914486170, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 99240206}
-    - targetCorrespondingSourceObject: {fileID: 491124901914486170, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 99240205}
-    - targetCorrespondingSourceObject: {fileID: 491124901914486170, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 99240204}
-    - targetCorrespondingSourceObject: {fileID: 491124901914486170, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 99240203}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
 --- !u!4 &99240200 stripped
 Transform:
@@ -544,192 +514,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2468282021181825328, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
   m_PrefabInstance: {fileID: 99240199}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &99240202 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 491124901914486170, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
-  m_PrefabInstance: {fileID: 99240199}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &99240203
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 99240202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12bb444a8fdc18d4eb986608ae48b80c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RubTracker
-  trackedStep: 7
-  movementThreshold: 0.1
-  proximityThreshold: 0.3
-  latherTime: 2
-  requireHandsTogether: 1
---- !u!114 &99240204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 99240202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12bb444a8fdc18d4eb986608ae48b80c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RubTracker
-  trackedStep: 6
-  movementThreshold: 0.1
-  proximityThreshold: 0.3
-  latherTime: 2
-  requireHandsTogether: 1
---- !u!114 &99240205
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 99240202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12bb444a8fdc18d4eb986608ae48b80c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RubTracker
-  trackedStep: 5
-  movementThreshold: 0.1
-  proximityThreshold: 0.3
-  latherTime: 2
-  requireHandsTogether: 1
---- !u!114 &99240206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 99240202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12bb444a8fdc18d4eb986608ae48b80c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RubTracker
-  trackedStep: 4
-  movementThreshold: 0.1
-  proximityThreshold: 0.3
-  latherTime: 2
-  requireHandsTogether: 1
---- !u!114 &99240207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 99240202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12bb444a8fdc18d4eb986608ae48b80c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RubTracker
-  trackedStep: 3
-  movementThreshold: 0.1
-  proximityThreshold: 0.3
-  latherTime: 2
-  requireHandsTogether: 1
---- !u!54 &99240208
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 99240202}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &99240209
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 99240202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12bb444a8fdc18d4eb986608ae48b80c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VRHandRubTracker
-  trackedStep: 2
-  movementThreshold: 0.1
-  proximityThreshold: 0.3
-  latherTime: 1
-  requireHandsTogether: 1
---- !u!114 &99240210
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 99240202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe3472ac325459949bf15bb5198daac7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HandFoam
-  foamAssetParents:
-  - {fileID: 440682632}
-  - {fileID: 2142785749}
-  soaps:
-  - {fileID: 976135719}
---- !u!114 &99240211
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 99240202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45848bc9fa8bf9c48b780dae0b8247a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HandSoap
-  hand: 1
-  soapVisual: {fileID: 976135719}
---- !u!135 &99240212
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 99240202}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.05
-  m_Center: {x: 0, y: 0, z: 0.1}
 --- !u!65 &142391383
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -878,15 +662,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 440682633}
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 9019872111205603751, guid: b3ed8a0a703ebd34a9e44ed3d9f1fcf6, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 157214868}
-    - targetCorrespondingSourceObject: {fileID: 9019872111205603751, guid: b3ed8a0a703ebd34a9e44ed3d9f1fcf6, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 157214867}
-    - targetCorrespondingSourceObject: {fileID: 9019872111205603751, guid: b3ed8a0a703ebd34a9e44ed3d9f1fcf6, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 157214866}
     - targetCorrespondingSourceObject: {fileID: 3896742718563990912, guid: b3ed8a0a703ebd34a9e44ed3d9f1fcf6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 157214865}
@@ -899,11 +674,6 @@ Transform:
 --- !u!1 &157214862 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3896742718563990912, guid: b3ed8a0a703ebd34a9e44ed3d9f1fcf6, type: 3}
-  m_PrefabInstance: {fileID: 157214860}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &157214863 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9019872111205603751, guid: b3ed8a0a703ebd34a9e44ed3d9f1fcf6, type: 3}
   m_PrefabInstance: {fileID: 157214860}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &157214864 stripped
@@ -932,68 +702,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.05859275, y: 0.012366444, z: 0.06265705}
   m_Center: {x: -0.005063243, y: -0.020385487, z: 0.018671427}
---- !u!54 &157214866
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 157214863}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &157214867
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 157214863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45848bc9fa8bf9c48b780dae0b8247a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HandSoap
-  hand: 0
-  soapVisual: {fileID: 0}
---- !u!135 &157214868
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 157214863}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.05
-  m_Center: {x: 0, y: 0, z: 0.1}
 --- !u!1 &178010708
 GameObject:
   m_ObjectHideFlags: 0
@@ -1820,7 +1528,6 @@ GameObject:
   - component: {fileID: 290683570}
   - component: {fileID: 290683569}
   - component: {fileID: 290683568}
-  - component: {fileID: 290683567}
   - component: {fileID: 290683566}
   m_Layer: 0
   m_Name: Tutorial Hands
@@ -1856,27 +1563,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!135 &290683567
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 290683565}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.2
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &290683568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5879,12 +5565,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e2adb99dd1f0704a8b61b91351e7f04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  currentRecordingName: ApplySoap.demo
+  currentRecordingName: FingersInterlaced.demo
   leftRoot: {fileID: 1769531789}
   rightRoot: {fileID: 945268879}
   tutorialLeftRoot: {fileID: 157214861}
   tutorialRightRoot: {fileID: 99240201}
   tutorialHands: {fileID: 290683565}
+  trimStartFrames: 40
+  trimEndFrames: 40
 --- !u!4 &1293350281
 Transform:
   m_ObjectHideFlags: 0
