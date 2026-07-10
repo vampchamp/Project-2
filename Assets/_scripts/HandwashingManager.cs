@@ -101,7 +101,9 @@ public class HandwashingManager : MonoBehaviour
         if (CurrentStep != WashStep.Complete)
             TotalElapsedTime += Time.deltaTime;
 
-        if (IsRubbingStep(CurrentStep))
+        // PalmToPalm is driven by the collider-based PalmRubDetector, so skip the
+        // legacy generic motion detector for that step to avoid double-counting.
+        if (IsRubbingStep(CurrentStep) && CurrentStep != WashStep.PalmToPalm)
         {
             ProcessVRHandTrackingInput();
         }
