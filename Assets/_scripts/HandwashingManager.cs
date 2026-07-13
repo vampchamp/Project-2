@@ -249,6 +249,16 @@ public class HandwashingManager : MonoBehaviour
         AccumulateUnifiedScrubProgress(normalizedDelta * targetScrubDistance);
     }
 
+    public float GetStepDuration(WashStep step)
+        => stepDurations.TryGetValue(step, out float d) ? d : 0f;
+
+    public void SetProgress(WashStep step, float normalized)
+    {
+        if (step != CurrentStep) return;
+        CurrentStepProgress = Mathf.Clamp01(normalized);
+        OnProgressChanged?.Invoke(CurrentStepProgress);
+    }
+
     public void CompleteCurrentStep()
     {
         if (CurrentStep == WashStep.Complete)
