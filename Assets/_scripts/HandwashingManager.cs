@@ -30,10 +30,9 @@ public class HandwashingManager : MonoBehaviour
     public float RightHandProgress { get; private set; }
 
     [Header("Absolute Workspace Tuning (World/Tracking Space)")]
-    [SerializeField] private float maxDistance = 0.30f;       // Roomy proximity check for messy water data
-    [SerializeField] private float targetScrubDistance = 0.35f; // Physical motion threshold (Lowered to clear faster)
+    [SerializeField] private float maxDistance = 0.30f;
+    [SerializeField] private float targetScrubDistance = 0.35f;
 
-    // Safety check fallback: Only requires hands to exist somewhere in the tracking environment
     [SerializeField] private bool useAbsoluteProximityOnly = true;
 
     public event Action<WashStep> OnStepChanged;
@@ -42,6 +41,9 @@ public class HandwashingManager : MonoBehaviour
     public event Action<Handedness, float> OnHandProgressChanged;
 
     private readonly HashSet<WashStep> completedSteps = new();
+
+    private static readonly HashSet<WashStep> colliderDrivenSteps = new();
+    public static void RegisterColliderStep(WashStep step) => colliderDrivenSteps.Add(step);
 
     private MonoBehaviour xrHandManagerInstance;
     private bool searchedForComponents = false;
@@ -101,9 +103,9 @@ public class HandwashingManager : MonoBehaviour
         if (CurrentStep != WashStep.Complete)
             TotalElapsedTime += Time.deltaTime;
 
-        // PalmToPalm is driven by the collider-based PalmRubDetector, so skip the
-        // legacy generic motion detector for that step to avoid double-counting.
-        if (IsRubbingStep(CurrentStep) && CurrentStep != WashStep.PalmToPalm)
+        if (IsRubbingStep(CurrentStep) &&
+            CurrentStep != WashStep.PalmToPalm &&
+            !colliderDrivenSteps.Contains(CurrentStep))
         {
             ProcessVRHandTrackingInput();
         }
@@ -141,7 +143,6 @@ public class HandwashingManager : MonoBehaviour
             bool leftTracked = (bool)(leftHand.GetType().GetProperty("isTracked")?.GetValue(leftHand) ?? false);
             bool rightTracked = (bool)(rightHand.GetType().GetProperty("isTracked")?.GetValue(rightHand) ?? false);
 
-            // If completely blind under the running water, do not drop variables
             if (!leftTracked && !rightTracked) return;
 
             var getJointMethod = leftHand.GetType().GetMethod("GetJoint");
@@ -171,24 +172,19 @@ public class HandwashingManager : MonoBehaviour
                 return;
             }
 
-            // Delta translation frames calculation
             float leftFrameMovement = leftTracked && leftValid ? Vector3.Distance(leftPose.position, lastLeftPalmPos) : 0f;
             float rightFrameMovement = rightTracked && rightValid ? Vector3.Distance(rightPose.position, lastRightPalmPos) : 0f;
 
-            // Strict filter threshold to stop telemetry spikes inside water basins
             if (leftFrameMovement > 0.12f) leftFrameMovement = 0f;
             if (rightFrameMovement > 0.12f) rightFrameMovement = 0f;
 
             if (leftTracked && leftValid) lastLeftPalmPos = leftPose.position;
             if (rightTracked && rightValid) lastRightPalmPos = rightPose.position;
 
-            // --- ZERO ANGLE / ZERO VIEW CONSTRAINTS DEPENDENCY ---
-            // We strip head tracking and camera positions entirely from the logic loops.
             if (leftTracked && rightTracked && leftValid && rightValid)
             {
                 float palmDistance = Vector3.Distance(leftPose.position, rightPose.position);
 
-                // If they are within 30cm of each other, accumulation runs completely free
                 if (palmDistance <= maxDistance)
                 {
                     float frameScrubDelta = leftFrameMovement + rightFrameMovement;
@@ -200,7 +196,6 @@ public class HandwashingManager : MonoBehaviour
             }
             else if (useAbsoluteProximityOnly)
             {
-                // Under water tracking drop mitigation strategy
                 float singleHandDelta = Mathf.Max(leftFrameMovement, rightFrameMovement);
                 if (singleHandDelta > 0.0003f)
                 {
@@ -210,7 +205,6 @@ public class HandwashingManager : MonoBehaviour
         }
         catch
         {
-            // Fail-safe container boundaries
         }
     }
 

@@ -15,19 +15,17 @@ public class FoamZone : MonoBehaviour
         HandwashingManager manager = HandwashingManager.Instance;
         if (manager == null) return;
 
-        // Wetting hands
         if (manager.CurrentStep == HandwashingManager.WashStep.WetHands)
         {
             manager.AccumulateProgress(HandwashingManager.WashStep.WetHands, Time.deltaTime);
             if (handSoap != null) handSoap.SetWet();
         }
-        // Rinsing soap & foam away
         else if (manager.CurrentStep == HandwashingManager.WashStep.Rinse)
         {
             manager.AccumulateProgress(HandwashingManager.WashStep.Rinse, Time.deltaTime);
 
             if (handFoam != null) handFoam.WashFoam(Time.deltaTime / 2.5f);
-            if (handSoap != null) handSoap.WashOffSoap();   // turn the soap visual off under water
+            if (handSoap != null) handSoap.WashOffSoap();
         }
     }
 }

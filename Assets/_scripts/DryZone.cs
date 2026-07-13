@@ -1,8 +1,5 @@
 using UnityEngine;
 
-// Drives the final WHO step (Dry). Place this on a trigger volume at the
-// towel / air-dryer. While a hand tagged 'Hand' stays inside and the current
-// step is Dry, progress accumulates and any residual foam is cleared.
 public class DryZone : MonoBehaviour
 {
     [SerializeField] private float foamClearTime = 2f;

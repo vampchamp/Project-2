@@ -1,17 +1,13 @@
 using UnityEngine;
 
-// Tracks BOTH hands for one WHO rubbing step using direct hand references
-// (robust to rig geometry). Each hand fills its own progress while it is
-// moving AND the two hands are close together. The step completes only when
-// BOTH hands have filled - this is what 'covers each hand'.
 public class RubTracker : MonoBehaviour
 {
     [Header("WHO Step")]
     [SerializeField] private HandwashingManager.WashStep trackedStep;
 
     [Header("Settings")]
-    [SerializeField] private float movementThreshold = 0.1f;   // m/s, per hand
-    [SerializeField] private float proximityThreshold = 0.3f;  // m, hand-to-hand
+    [SerializeField] private float movementThreshold = 0.1f;
+    [SerializeField] private float proximityThreshold = 0.3f;
     [SerializeField] private float latherTime = 2f;
     [SerializeField] private bool requireHandsTogether = true;
 

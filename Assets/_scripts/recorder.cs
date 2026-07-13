@@ -206,7 +206,6 @@ public class recorder : MonoBehaviour
 
             foreach (Frame frame in recording.frames)
             {
-                // LEFT HAND
                 writer.Write(frame.left.Count);
 
                 foreach (BoneFrame bone in frame.left)
@@ -221,7 +220,6 @@ public class recorder : MonoBehaviour
                     writer.Write(bone.rotation.w);
                 }
 
-                // RIGHT HAND
                 writer.Write(frame.right.Count);
 
                 foreach (BoneFrame bone in frame.right)
@@ -261,7 +259,6 @@ public class recorder : MonoBehaviour
             {
                 Frame frame = new Frame();
 
-                // LEFT HAND
                 int leftCount = reader.ReadInt32();
 
                 for (int i = 0; i < leftCount; i++)
@@ -282,7 +279,6 @@ public class recorder : MonoBehaviour
                     frame.left.Add(bone);
                 }
 
-                // RIGHT HAND
                 int rightCount = reader.ReadInt32();
 
                 for (int i = 0; i < rightCount; i++)
