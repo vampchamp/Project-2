@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class FoamZone : MonoBehaviour
 {
+    private int lastProgressFrame = -1;
+
     private void OnTriggerStay(Collider other)
     {
         HandFoam handFoam = other.GetComponentInChildren<HandFoam>();
@@ -15,17 +17,23 @@ public class FoamZone : MonoBehaviour
         HandwashingManager manager = HandwashingManager.Instance;
         if (manager == null) return;
 
+        bool firstThisFrame = lastProgressFrame != Time.frameCount;
+
         if (manager.CurrentStep == HandwashingManager.WashStep.WetHands)
         {
-            manager.AccumulateProgress(HandwashingManager.WashStep.WetHands, Time.deltaTime);
+            if (firstThisFrame)
+                manager.AccumulateProgress(HandwashingManager.WashStep.WetHands, Time.deltaTime);
             if (handSoap != null) handSoap.SetWet();
         }
         else if (manager.CurrentStep == HandwashingManager.WashStep.Rinse)
         {
-            manager.AccumulateProgress(HandwashingManager.WashStep.Rinse, Time.deltaTime);
+            if (firstThisFrame)
+                manager.AccumulateProgress(HandwashingManager.WashStep.Rinse, Time.deltaTime);
 
             if (handFoam != null) handFoam.WashFoam(Time.deltaTime / 2.5f);
             if (handSoap != null) handSoap.WashOffSoap();
         }
+
+        lastProgressFrame = Time.frameCount;
     }
 }

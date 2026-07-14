@@ -4,6 +4,8 @@ public class DryZone : MonoBehaviour
 {
     [SerializeField] private float foamClearTime = 2f;
 
+    private int lastProgressFrame = -1;
+
     private void OnTriggerStay(Collider other)
     {
         if (!other.CompareTag("Hand")) return;
@@ -13,7 +15,11 @@ public class DryZone : MonoBehaviour
 
         if (manager.CurrentStep != HandwashingManager.WashStep.Dry) return;
 
-        manager.AccumulateProgress(HandwashingManager.WashStep.Dry, Time.deltaTime);
+        if (lastProgressFrame != Time.frameCount)
+        {
+            manager.AccumulateProgress(HandwashingManager.WashStep.Dry, Time.deltaTime);
+            lastProgressFrame = Time.frameCount;
+        }
 
         HandFoam foam = other.GetComponentInChildren<HandFoam>();
         if (foam != null)
