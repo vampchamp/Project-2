@@ -6,6 +6,29 @@ public class DryZone : MonoBehaviour
 
     private int lastProgressFrame = -1;
 
+    private void Start()
+    {
+        var manager = HandwashingManager.Instance;
+        if (manager != null)
+            manager.OnStepChanged += HandleStepChanged;
+    }
+
+    private void OnDestroy()
+    {
+        var manager = HandwashingManager.Instance;
+        if (manager != null)
+            manager.OnStepChanged -= HandleStepChanged;
+    }
+
+    private void HandleStepChanged(HandwashingManager.WashStep step)
+    {
+        if (step == HandwashingManager.WashStep.Complete)
+        {
+            foreach (Collider col in GetComponentsInChildren<Collider>())
+                col.enabled = false;
+        }
+    }
+
     private void OnTriggerStay(Collider other)
     {
         if (!other.CompareTag("Hand")) return;
@@ -20,9 +43,10 @@ public class DryZone : MonoBehaviour
             manager.AccumulateProgress(HandwashingManager.WashStep.Dry, Time.deltaTime);
             lastProgressFrame = Time.frameCount;
         }
-
+        
         HandFoam foam = other.GetComponentInChildren<HandFoam>();
         if (foam != null)
             foam.WashFoam(Time.deltaTime / foamClearTime);
+        
     }
 }

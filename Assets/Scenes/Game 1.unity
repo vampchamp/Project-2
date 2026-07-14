@@ -1934,11 +1934,6 @@ Transform:
   - {fileID: 251344674}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &299608896 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3288495761867447508, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
-  m_PrefabInstance: {fileID: 724597482}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &312435301
 GameObject:
   m_ObjectHideFlags: 0
@@ -3445,7 +3440,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2468282021181825328, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2111533878}
-    - targetCorrespondingSourceObject: {fileID: 3288495761867447508, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 5784116713708183948, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1932484923}
     - targetCorrespondingSourceObject: {fileID: 7356241863038367081, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
@@ -3564,8 +3559,8 @@ MonoBehaviour:
   hand: 1
   zone: 0
   step: 3
-  requiredOtherZone: 0
-  drivesProgress: 1
+  requiredOtherZone: 1
+  drivesProgress: 0
   requireBothSides: 0
   requireEachSide: 0
   minSlideSpeed: 0.05
@@ -4587,7 +4582,7 @@ Transform:
   m_GameObject: {fileID: 968988230}
   serializedVersion: 2
   m_LocalRotation: {x: 0.755851, y: -0, z: -0, w: 0.6547438}
-  m_LocalPosition: {x: -0.043799996, y: -0.103612386, z: 0.021138221}
+  m_LocalPosition: {x: -0.043799996, y: -0.061, z: 0.027}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5243,8 +5238,8 @@ MonoBehaviour:
   hand: 0
   zone: 0
   step: 3
-  requiredOtherZone: 0
-  drivesProgress: 1
+  requiredOtherZone: 1
+  drivesProgress: 0
   requireBothSides: 0
   requireEachSide: 0
   minSlideSpeed: 0.05
@@ -5873,7 +5868,7 @@ Transform:
   m_GameObject: {fileID: 1201332555}
   serializedVersion: 2
   m_LocalRotation: {x: 0.755851, y: -0, z: -0, w: 0.6547438}
-  m_LocalPosition: {x: -0.04100001, y: -0.103612386, z: 0.021138221}
+  m_LocalPosition: {x: -0.04100001, y: -0.0615, z: 0.0272}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6045,6 +6040,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1208346142}
   m_CullTransparentMesh: 1
+--- !u!4 &1214399065 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5784116713708183948, guid: 3f7511fbc40ae7a4b89c3298a3de199d, type: 3}
+  m_PrefabInstance: {fileID: 724597482}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1216018552
 GameObject:
   m_ObjectHideFlags: 0
@@ -6692,6 +6692,11 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
   m_LayoutPriority: 1
+--- !u!4 &1352348161 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3946411421816380034, guid: b3ed8a0a703ebd34a9e44ed3d9f1fcf6, type: 3}
+  m_PrefabInstance: {fileID: 1633455186}
+  m_PrefabAsset: {fileID: 0}
 --- !u!134 &1366457354
 PhysicsMaterial:
   m_ObjectHideFlags: 0
@@ -8070,7 +8075,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5876909491052011584, guid: b3ed8a0a703ebd34a9e44ed3d9f1fcf6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 790181600}
-    - targetCorrespondingSourceObject: {fileID: 7683948867115331237, guid: b3ed8a0a703ebd34a9e44ed3d9f1fcf6, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 3946411421816380034, guid: b3ed8a0a703ebd34a9e44ed3d9f1fcf6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1746077611}
     - targetCorrespondingSourceObject: {fileID: 6241780104622499675, guid: b3ed8a0a703ebd34a9e44ed3d9f1fcf6, type: 3}
@@ -8379,12 +8384,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1746077610}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.02020623, y: -0.028131977, z: 0.025113463, w: 0.9990844}
-  m_LocalPosition: {x: -0.0199, y: 0.0277, z: -0.1322}
-  m_LocalScale: {x: 0.99995667, y: 1, z: 1.0000554}
+  m_LocalRotation: {x: -0.023404365, y: -0.054428566, z: 0.04107654, w: 0.99739784}
+  m_LocalPosition: {x: -0.015358994, y: 0.027474735, z: -0.08662755}
+  m_LocalScale: {x: 1, y: 1, z: 1.0000559}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1941343388}
+  m_Father: {fileID: 1352348161}
   m_LocalEulerAnglesHint: {x: -29.955, y: 0, z: 0}
 --- !u!114 &1746077612
 MonoBehaviour:
@@ -8401,7 +8406,7 @@ MonoBehaviour:
   hand: 0
   zone: 3
   step: 5
-  requiredOtherZone: 0
+  requiredOtherZone: 3
   drivesProgress: 1
   requireBothSides: 1
   requireEachSide: 0
@@ -9493,12 +9498,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1932484922}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.02020623, y: 0.028131977, z: -0.025113463, w: 0.9990844}
-  m_LocalPosition: {x: 0.0435, y: 0.026, z: -0.1331}
-  m_LocalScale: {x: 0.99995667, y: 1, z: 1.0000554}
+  m_LocalRotation: {x: -0.023404365, y: 0.054428566, z: -0.04107654, w: 0.99739784}
+  m_LocalPosition: {x: 0.03881249, y: 0.024991512, z: -0.08874347}
+  m_LocalScale: {x: 1, y: 1, z: 1.0000559}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 299608896}
+  m_Father: {fileID: 1214399065}
   m_LocalEulerAnglesHint: {x: -29.955, y: 0, z: 0}
 --- !u!114 &1932484924
 MonoBehaviour:
@@ -9515,7 +9520,7 @@ MonoBehaviour:
   hand: 1
   zone: 3
   step: 5
-  requiredOtherZone: 0
+  requiredOtherZone: 3
   drivesProgress: 1
   requireBothSides: 1
   requireEachSide: 0
@@ -9570,11 +9575,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.09203453, y: 0.012366444, z: 0.072409555}
   m_Center: {x: -0.010073356, y: -0.020385714, z: 0.08571509}
---- !u!4 &1941343388 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7683948867115331237, guid: b3ed8a0a703ebd34a9e44ed3d9f1fcf6, type: 3}
-  m_PrefabInstance: {fileID: 1633455186}
-  m_PrefabAsset: {fileID: 0}
 --- !u!134 &1951313790
 PhysicsMaterial:
   m_ObjectHideFlags: 0
@@ -16125,7 +16125,7 @@ MonoBehaviour:
   zone: 2
   step: 4
   requiredOtherZone: 2
-  drivesProgress: 1
+  drivesProgress: 0
   requireBothSides: 0
   requireEachSide: 0
   minSlideSpeed: 0.05
