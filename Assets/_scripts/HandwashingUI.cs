@@ -18,6 +18,7 @@ public class HandwashingUI : MonoBehaviour
     [SerializeField] private Image progressFill;
 
     [Header("Per-Hand Progress (used on rubbing steps)")]
+    [SerializeField] private GameObject handBarsRoot;
     [SerializeField] private Image leftHandFill;
     [SerializeField] private Image rightHandFill;
     [SerializeField] private TMP_Text leftHandLabel;
@@ -105,10 +106,17 @@ public class HandwashingUI : MonoBehaviour
 
         bool perSide = WashStepCatalog.GetRubMode(current) == RubMode.PerSide;
 
-        if (leftHandFill != null) leftHandFill.gameObject.SetActive(perSide);
-        if (rightHandFill != null) rightHandFill.gameObject.SetActive(perSide);
-        if (leftHandLabel != null) leftHandLabel.gameObject.SetActive(perSide);
-        if (rightHandLabel != null) rightHandLabel.gameObject.SetActive(perSide);
+        if (handBarsRoot != null)
+        {
+            handBarsRoot.SetActive(perSide);
+        }
+        else
+        {
+            if (leftHandFill != null) leftHandFill.gameObject.SetActive(perSide);
+            if (rightHandFill != null) rightHandFill.gameObject.SetActive(perSide);
+            if (leftHandLabel != null) leftHandLabel.gameObject.SetActive(perSide);
+            if (rightHandLabel != null) rightHandLabel.gameObject.SetActive(perSide);
+        }
 
         foreach (KeyValuePair<WashStep, TMP_Text> pair in stepTexts)
         {
@@ -119,7 +127,7 @@ public class HandwashingUI : MonoBehaviour
 
             if (manager.IsStepCompleted(pair.Key))
             {
-                pair.Value.text = "✓ " + label;
+                pair.Value.text = "• " + label;
                 pair.Value.color = Color.green;
             }
             else if (pair.Key == current)

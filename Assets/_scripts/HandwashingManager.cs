@@ -17,6 +17,7 @@ public class HandwashingManager : MonoBehaviour
     public event Action<float> OnProgressChanged;
     public event Action<WashStep> OnStepCompleted;
     public event Action<Handedness, float> OnHandProgressChanged;
+    public event Action OnSimulationReset;
 
     private readonly HashSet<WashStep> completedSteps = new();
 
@@ -130,6 +131,7 @@ public class HandwashingManager : MonoBehaviour
         TotalElapsedTime = 0f;
         ResetHandProgress();
 
+        OnSimulationReset?.Invoke();
         OnProgressChanged?.Invoke(0f);
         OnStepChanged?.Invoke(CurrentStep);
     }

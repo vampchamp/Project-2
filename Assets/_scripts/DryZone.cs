@@ -3,6 +3,7 @@ using UnityEngine;
 public class DryZone : MonoBehaviour
 {
     [SerializeField] private float foamClearTime = 2f;
+    [SerializeField] private GameObject towelVisual;
 
     private HandwashingManager manager;
     private int lastProgressFrame = -1;
@@ -10,23 +11,37 @@ public class DryZone : MonoBehaviour
     private void Start()
     {
         manager = HandwashingManager.Instance;
-        if (manager != null)
-            manager.OnStepChanged += HandleStepChanged;
+        if (manager == null)
+            return;
+
+        manager.OnStepCompleted += HandleStepCompleted;
+        manager.OnSimulationReset += HandleSimulationReset;
     }
 
     private void OnDestroy()
     {
-        if (manager != null)
-            manager.OnStepChanged -= HandleStepChanged;
-    }
-
-    private void HandleStepChanged(WashStep step)
-    {
-        if (step != WashStep.Complete)
+        if (manager == null)
             return;
 
-        foreach (Collider col in GetComponentsInChildren<Collider>())
-            col.enabled = false;
+        manager.OnStepCompleted -= HandleStepCompleted;
+        manager.OnSimulationReset -= HandleSimulationReset;
+    }
+
+    private void HandleStepCompleted(WashStep step)
+    {
+        if (step == WashStep.Dry)
+            SetDiscarded(true);
+    }
+
+    private void HandleSimulationReset() => SetDiscarded(false);
+
+    private void SetDiscarded(bool discarded)
+    {
+        if (towelVisual != null)
+            towelVisual.SetActive(!discarded);
+
+        foreach (Collider col in GetComponentsInChildren<Collider>(true))
+            col.enabled = !discarded;
     }
 
     private void OnTriggerStay(Collider other)

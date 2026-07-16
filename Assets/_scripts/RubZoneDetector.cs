@@ -24,6 +24,7 @@ public class RubZoneDetector : MonoBehaviour
     public bool DrivesProgress => drivesProgress;
 
     public bool IsRubbing { get; private set; }
+    public float ContactDistance { get; private set; } = float.PositiveInfinity;
 
     private RubZoneDetector partner;
     private float contactTimer;
@@ -79,6 +80,7 @@ public class RubZoneDetector : MonoBehaviour
             contactTimer -= Time.deltaTime;
 
         IsRubbing = false;
+        ContactDistance = float.PositiveInfinity;
 
         if (partner != null && contactTimer > 0f && Time.deltaTime > 0f)
         {
@@ -86,6 +88,7 @@ public class RubZoneDetector : MonoBehaviour
             Vector3 partnerDelta = partner.transform.position - partnerLastPos;
             float relativeSpeed = (myDelta - partnerDelta).magnitude / Time.deltaTime;
             IsRubbing = relativeSpeed >= minSlideSpeed;
+            ContactDistance = Vector3.Distance(transform.position, partner.transform.position);
         }
 
         lastPos = transform.position;

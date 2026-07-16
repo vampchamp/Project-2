@@ -75,6 +75,33 @@ public class HandFoam : MonoBehaviour
         }
     }
 
+    public void ResetFoam()
+    {
+        FoamAmount = 0f;
+
+        foreach (GameObject foam in foamAssetParents)
+        {
+            if (foam != null)
+                foam.SetActive(false);
+        }
+
+        UpdateFoamVisibility(0f);
+
+        foreach (GameObject soap in soaps)
+        {
+            if (soap == null)
+                continue;
+
+            Renderer renderer = soap.GetComponent<Renderer>();
+            if (renderer == null)
+                continue;
+
+            Color c = renderer.material.color;
+            c.a = 1f;
+            renderer.material.color = c;
+        }
+    }
+
     private void UpdateFoamVisibility(float alpha)
     {
         foreach (Renderer ren in foamRenderers)
