@@ -37,7 +37,7 @@ public class SoapPump : MonoBehaviour
                 HandwashingManager manager = HandwashingManager.Instance;
 
                 if (manager != null &&
-                    manager.CurrentStep == HandwashingManager.WashStep.ApplySoap)
+                    manager.CurrentStep == WashStep.ApplySoap)
                 {
                     manager.CompleteCurrentStep();
                 }

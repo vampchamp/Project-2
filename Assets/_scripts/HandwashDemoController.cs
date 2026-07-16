@@ -2,28 +2,32 @@ using UnityEngine;
 
 public class HandwashDemoController : MonoBehaviour
 {
-    [SerializeField] private recorder recorder;
+    [SerializeField] private HandDemoRecorder recorder;
+
+    private HandwashingManager manager;
 
     private void Start()
     {
-        var manager = HandwashingManager.Instance;
+        manager = HandwashingManager.Instance;
+        if (manager == null)
+            return;
 
-        if (manager != null)
-        {
-            manager.OnStepChanged += OnStep;
-            OnStep(manager.CurrentStep);
-        }
+        manager.OnStepChanged += OnStep;
+        OnStep(manager.CurrentStep);
     }
 
     private void OnDestroy()
     {
-        if (HandwashingManager.Instance != null)
-            HandwashingManager.Instance.OnStepChanged -= OnStep;
+        if (manager != null)
+            manager.OnStepChanged -= OnStep;
     }
 
-    private void OnStep(HandwashingManager.WashStep step)
+    private void OnStep(WashStep step)
     {
-        if (step == HandwashingManager.WashStep.Complete)
+        if (recorder == null)
+            return;
+
+        if (step == WashStep.Complete)
         {
             recorder.StopPlayback();
             return;
@@ -31,5 +35,4 @@ public class HandwashDemoController : MonoBehaviour
 
         recorder.StartPlayback(step + ".demo");
     }
-    
 }

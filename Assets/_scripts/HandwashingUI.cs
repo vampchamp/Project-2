@@ -17,7 +17,7 @@ public class HandwashingUI : MonoBehaviour
     [Header("Progress")]
     [SerializeField] private Image progressFill;
 
-    [Header("Per-Hand Progress (optional, used on rubbing steps)")]
+    [Header("Per-Hand Progress (used on rubbing steps)")]
     [SerializeField] private Image leftHandFill;
     [SerializeField] private Image rightHandFill;
     [SerializeField] private TMP_Text leftHandLabel;
@@ -35,31 +35,38 @@ public class HandwashingUI : MonoBehaviour
     [SerializeField] private TMP_Text rinse;
     [SerializeField] private TMP_Text dry;
 
-    private Dictionary<HandwashingManager.WashStep, TMP_Text> stepTexts;
+    private Dictionary<WashStep, TMP_Text> stepTexts;
+    private HandwashingManager manager;
+    private int lastDisplayedSecond = -1;
 
     private void Start()
     {
-        if (followCamera && followTarget == null)
+        if (followCamera && followTarget == null && Camera.main != null)
             followTarget = Camera.main.transform;
 
         if (leftHandLabel != null) leftHandLabel.text = "Left";
         if (rightHandLabel != null) rightHandLabel.text = "Right";
 
-        stepTexts = new Dictionary<HandwashingManager.WashStep, TMP_Text>()
+        stepTexts = new Dictionary<WashStep, TMP_Text>
         {
-            { HandwashingManager.WashStep.WetHands, wetHands },
-            { HandwashingManager.WashStep.ApplySoap, applySoap },
-            { HandwashingManager.WashStep.PalmToPalm, palmToPalm },
-            { HandwashingManager.WashStep.BackOfHands, backOfHands },
-            { HandwashingManager.WashStep.FingersInterlaced, fingersInterlaced },
-            { HandwashingManager.WashStep.BacksOfFingers, backsOfFingers },
-            { HandwashingManager.WashStep.Thumbs, thumbs },
-            { HandwashingManager.WashStep.Fingertips, fingertips },
-            { HandwashingManager.WashStep.Rinse, rinse },
-            { HandwashingManager.WashStep.Dry, dry }
+            { WashStep.WetHands, wetHands },
+            { WashStep.ApplySoap, applySoap },
+            { WashStep.PalmToPalm, palmToPalm },
+            { WashStep.BackOfHands, backOfHands },
+            { WashStep.FingersInterlaced, fingersInterlaced },
+            { WashStep.BacksOfFingers, backsOfFingers },
+            { WashStep.Thumbs, thumbs },
+            { WashStep.Fingertips, fingertips },
+            { WashStep.Rinse, rinse },
+            { WashStep.Dry, dry }
         };
 
-        HandwashingManager manager = HandwashingManager.Instance;
+        manager = HandwashingManager.Instance;
+        if (manager == null)
+        {
+            enabled = false;
+            return;
+        }
 
         manager.OnStepChanged += UpdateCurrentStep;
         manager.OnProgressChanged += UpdateProgress;
@@ -69,6 +76,16 @@ public class HandwashingUI : MonoBehaviour
         UpdateProgress(manager.CurrentStepProgress);
         UpdateHandProgress(Handedness.Left, manager.LeftHandProgress);
         UpdateHandProgress(Handedness.Right, manager.RightHandProgress);
+    }
+
+    private void OnDestroy()
+    {
+        if (manager == null)
+            return;
+
+        manager.OnStepChanged -= UpdateCurrentStep;
+        manager.OnProgressChanged -= UpdateProgress;
+        manager.OnHandProgressChanged -= UpdateHandProgress;
     }
 
     private void LateUpdate()
@@ -82,31 +99,37 @@ public class HandwashingUI : MonoBehaviour
         UpdateTimer();
     }
 
-    private void UpdateCurrentStep(HandwashingManager.WashStep current)
+    private void UpdateCurrentStep(WashStep current)
     {
-        instructionText.text = HandwashingManager.Instance.GetCurrentInstruction();
+        instructionText.text = manager.GetCurrentInstruction();
 
-        bool rubbing = HandwashingManager.Instance.IsRubbingStep(current);
-        if (leftHandFill != null) leftHandFill.gameObject.SetActive(rubbing);
-        if (rightHandFill != null) rightHandFill.gameObject.SetActive(rubbing);
-        if (leftHandLabel != null) leftHandLabel.gameObject.SetActive(rubbing);
-        if (rightHandLabel != null) rightHandLabel.gameObject.SetActive(rubbing);
+        bool perSide = WashStepCatalog.GetRubMode(current) == RubMode.PerSide;
 
-        foreach (var pair in stepTexts)
+        if (leftHandFill != null) leftHandFill.gameObject.SetActive(perSide);
+        if (rightHandFill != null) rightHandFill.gameObject.SetActive(perSide);
+        if (leftHandLabel != null) leftHandLabel.gameObject.SetActive(perSide);
+        if (rightHandLabel != null) rightHandLabel.gameObject.SetActive(perSide);
+
+        foreach (KeyValuePair<WashStep, TMP_Text> pair in stepTexts)
         {
-            if (HandwashingManager.Instance.IsStepCompleted(pair.Key))
+            if (pair.Value == null)
+                continue;
+
+            string label = WashStepCatalog.GetDisplayName(pair.Key);
+
+            if (manager.IsStepCompleted(pair.Key))
             {
-                pair.Value.text = "\u2713 " + Format(pair.Key);
+                pair.Value.text = "✓ " + label;
                 pair.Value.color = Color.green;
             }
             else if (pair.Key == current)
             {
-                pair.Value.text = "\u25BA " + Format(pair.Key);
+                pair.Value.text = "► " + label;
                 pair.Value.color = Color.yellow;
             }
             else
             {
-                pair.Value.text = "\u25CB " + Format(pair.Key);
+                pair.Value.text = "○ " + label;
                 pair.Value.color = Color.white;
             }
         }
@@ -120,49 +143,18 @@ public class HandwashingUI : MonoBehaviour
 
     private void UpdateHandProgress(Handedness hand, float value)
     {
-        if (hand == Handedness.Left)
-        {
-            if (leftHandFill != null) leftHandFill.fillAmount = value;
-        }
-        else
-        {
-            if (rightHandFill != null) rightHandFill.fillAmount = value;
-        }
+        Image fill = hand == Handedness.Left ? leftHandFill : rightHandFill;
+        if (fill != null)
+            fill.fillAmount = value;
     }
 
     private void UpdateTimer()
     {
-        var manager = HandwashingManager.Instance;
-        int m = Mathf.FloorToInt(manager.TotalElapsedTime / 60f);
-        int s = Mathf.FloorToInt(manager.TotalElapsedTime % 60f);
-        timerText.text = $"{m:00}:{s:00}";
-    }
-
-    private string Format(HandwashingManager.WashStep step)
-    {
-        switch (step)
-        {
-            case HandwashingManager.WashStep.WetHands: return "Wet Hands";
-            case HandwashingManager.WashStep.ApplySoap: return "Apply Soap";
-            case HandwashingManager.WashStep.PalmToPalm: return "Palm to Palm";
-            case HandwashingManager.WashStep.BackOfHands: return "Back of Hands";
-            case HandwashingManager.WashStep.FingersInterlaced: return "Fingers Interlaced";
-            case HandwashingManager.WashStep.BacksOfFingers: return "Backs of Fingers";
-            case HandwashingManager.WashStep.Thumbs: return "Thumb Rotation";
-            case HandwashingManager.WashStep.Fingertips: return "Fingertips";
-            case HandwashingManager.WashStep.Rinse: return "Rinse";
-            case HandwashingManager.WashStep.Dry: return "Dry";
-            default: return step.ToString();
-        }
-    }
-
-    private void OnDestroy()
-    {
-        if (HandwashingManager.Instance == null)
+        int total = Mathf.FloorToInt(manager.TotalElapsedTime);
+        if (total == lastDisplayedSecond)
             return;
 
-        HandwashingManager.Instance.OnStepChanged -= UpdateCurrentStep;
-        HandwashingManager.Instance.OnProgressChanged -= UpdateProgress;
-        HandwashingManager.Instance.OnHandProgressChanged -= UpdateHandProgress;
+        lastDisplayedSecond = total;
+        timerText.text = $"{total / 60:00}:{total % 60:00}";
     }
 }
